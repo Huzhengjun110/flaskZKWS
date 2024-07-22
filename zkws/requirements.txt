@@ -1,0 +1,6 @@
+marshmallow
+passlib
+flask
+python_alipay-sdk
+requests
+werkzeug
