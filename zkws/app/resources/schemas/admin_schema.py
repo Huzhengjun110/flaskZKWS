@@ -1,5 +1,3 @@
-from enum import Enum
-
 from flask_restful import reqparse
 import re
 from werkzeug.exceptions import BadRequest
@@ -30,31 +28,8 @@ def password(password_str):
             "Invalid password. It must be at least 8 characters long and contain both letters and numbers.")
 
 
-class AdminType(Enum):
-    super_admin = "super_admin"
-    system_admin = "system_admin"
-    secure_admin = "secure_admin"
-
-
-def admin_type(admin_type_str):
-    """
-    检查admin_type是否有效
-    :param admin_type_str: admin_type字符串
-    :return: 如果有效返回admin_type字符串，否则抛出BadRequest异常
-    """
-    try:
-        return AdminType(admin_type_str).value
-    except ValueError:
-        raise BadRequest(f"Invalid admin type. It must be one of: {[e.value for e in AdminType]}")
-
-
 def adminData():
     parser = reqparse.RequestParser()
-    parser.add_argument(
-        'id', dest='id',
-        type=int,
-        default=-1,
-    )
     parser.add_argument(
         'username', dest='username',
         type=username,
@@ -66,9 +41,8 @@ def adminData():
         required=True,
     )
     parser.add_argument(
-        'admin_type', dest='admin_type',
-        type=admin_type,
-        required=True,
+        'type_id', dest='type_id',
+        type=int,
     )
     args = parser.parse_args()
     return args

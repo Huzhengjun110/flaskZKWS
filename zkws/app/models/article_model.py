@@ -5,11 +5,16 @@ class ArticlesModel(db.Model):
     # 用于保存范例文章信息
     __tablename__ = 'model_articles'
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
     type = db.Column(
         db.Enum('新闻', '演讲', '公函', '命令', '议案', '公报', '纪要', '公告', '通告', '意见', '通知', '通报', '报告',
                 '请示', '批复', '决议', '决定', '其他'))
-    title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.UnicodeText, nullable=False)
+
+    def __init__(self, article_title, article_type, article_content):
+        self.type = article_type
+        self.title = article_title
+        self.content = article_content
 
     def save_to_db(self):
         db.session.add(self)

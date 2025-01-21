@@ -47,3 +47,17 @@ def updateUserArticle(article_id, article_type, title, content):
         "content": article.content,
         "updated_time": article.updated_time.isoformat()
     }, 201
+
+
+def deleteUserArticles(user_id, article_id):
+    article = UserArticlesModel.query.filter_by(id=article_id).first()
+    if user_id != article.user_id:
+        return {
+            "message": "权限不足，无法删除不是别人的历史文档",
+        }, 401
+    else:
+        db.session.delete(article)
+        db.session.commit()
+        return {
+            "message": "删除文档成功",
+        }, 201

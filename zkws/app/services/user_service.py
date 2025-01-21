@@ -11,11 +11,11 @@ def login(account, password):
     if not current_user:
         current_user = UserModel.find_by_email(account)
         if not current_user:
-            return {'message': 'Account does not exist'}, 404
+            return {'message': '账户或密码输入错误！'}, 404
     # 验证密码
     if not UserModel.verify_hash(password, current_user.password):
         time.sleep(1)  # 增加延迟以防止暴力破解
-        return {'message': 'Wrong credentials'}, 401
+        return {'message': '账户或密码输入错误！'}, 404
     # 创建JWT令牌
     try:
         access_token = create_access_token(identity=current_user.id)
@@ -40,9 +40,9 @@ def login(account, password):
 def register(nickname, phone, email, password):
     # 检查手机号和邮箱是否已存在
     if UserModel.find_by_phone(phone):
-        return {'message': 'Phone number already exists'}, 400
+        return {'message': '手机号已被注册!'}, 400
     if UserModel.find_by_email(email):
-        return {'message': 'Email already exists'}, 400
+        return {'message': '邮箱已被注册！'}, 400
     # 创建新用户
     new_user = UserModel(
         nickname=nickname,

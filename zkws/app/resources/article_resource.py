@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.article_service import returnAllExampleArticles, returnAllUserArticlesById, createUserArticle, updateUserArticle
+from app.services.article_service import returnAllExampleArticles, returnAllUserArticlesById, createUserArticle, updateUserArticle, deleteUserArticles
 from app.resources.schemas.article import new_article_data, update_articles_data
 
 bp = Blueprint('article', __name__, url_prefix='/article')
@@ -49,6 +49,15 @@ class ArticleUserList(Resource):
             }, 400
         # 根据用户id返回所有文章
         return returnAllUserArticlesById(user_id)
+
+    @jwt_required()
+    def delete(self, user_id):
+        # 下面这行代码是后来添加的，因为最初的时候不太懂restful接口规范
+        article_id = user_id
+        # 用户删除公文
+        current_user_id = get_jwt_identity()
+        # 根据用户id与公文id删除文章
+        return deleteUserArticles(current_user_id, article_id)
 
 
 class ArticleExampleList(Resource):
